@@ -1,8 +1,8 @@
 /***********************************
- * @author alkaid
- * @since  2023.3.1
+ * @author uichuan47
+ * @since  2024.1.1
  * @brief  数据池 类实现
- * @date   2023.3.2
+ * @date   2024.1.2
  ***********************************/
 
 Mat::Mat(double _time = 10.0) : time_stamp(_time)
