@@ -273,15 +273,6 @@ void *CThreadPool::ThreadFunc(void *threadData)
         if (err != 0)
             ngx_log_stderr(err, "CThreadPool::ThreadFunc()中pthread_mutex_lock()失败，返回的错误码为%d!", err); // 有问题，要及时报告
 
-        // 以下这行程序写法技巧十分重要，必须要用while这种写法，
-        // 因为：pthread_cond_wait()是个值得注意的函数，调用一次pthread_cond_signal()可能会唤醒多个【惊群】
-        // 【官方描述是 至少一个/pthread_cond_signal 在多处理器上可能同时唤醒多个线程】
-        // 老师也在《c++入门到精通 c++ 98/11/14/17》里第六章第十三节谈过虚假唤醒，实际上是一个意思；
-        // 老师也在《c++入门到精通 c++ 98/11/14/17》里第六章第八节谈过条件变量、wait()、notify_one()、notify_all()
-        // 其实跟这里的pthread_cond_wait、pthread_cond_signal、pthread_cond_broadcast非常类似
-        // pthread_cond_wait() 函数，如果只有一条消息 唤醒了两个线程干活，
-        // 那么其中有一个线程拿不到消息，那如果不用while写，就会出问题，所以被惊醒后必须再次用while拿消息，拿到才走下来；
-        // while( (jobbuf = g_socket.outMsgRecvQueue()) == NULL && m_shutdown == false)
 
         // 通知函数可能会意外唤醒多个线程从队列中取数据，因此即便被唤醒，也需要判断队列内是否存在数据
         //

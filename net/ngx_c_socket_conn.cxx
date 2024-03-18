@@ -87,14 +87,13 @@ void CSocekt::initconnection()
     int ilenconnpool = sizeof(ngx_connection_t);    
     for(int i = 0; i < m_worker_connections; ++i) //先创建这么多个连接，后续不够再增加
     {
-        p_Conn = (lpngx_connection_t)p_memory->AllocMemory(ilenconnpool,true); //清理内存 , 因为这里分配内存new char，无法执行构造函数，所以如下：
-        //手工调用构造函数，因为AllocMemory里无法调用构造函数
-        p_Conn = new(p_Conn) ngx_connection_t();  //定位new【不懂请百度】，释放则显式调用p_Conn->~ngx_connection_t();		
+        p_Conn = (lpngx_connection_t)p_memory->AllocMemory(ilenconnpool,true); 
+        p_Conn = new(p_Conn) ngx_connection_t(); 	
         p_Conn->GetOneToUse();
-        m_connectionList.push_back(p_Conn);     //所有链接【不管是否空闲】都放在这个list
-        m_freeconnectionList.push_back(p_Conn); //空闲连接会放在这个list
+        m_connectionList.push_back(p_Conn);     
+        m_freeconnectionList.push_back(p_Conn); 
     } //end for
-    m_free_connection_n = m_total_connection_n = m_connectionList.size(); //开始这两个列表一样大
+    m_free_connection_n = m_total_connection_n = m_connectionList.size(); 
     return;
 }
 

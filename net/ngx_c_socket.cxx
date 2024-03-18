@@ -208,13 +208,9 @@ bool CSocekt::ngx_open_listening_sockets()
         int reuseport = 1;
         if (setsockopt(isock, SOL_SOCKET, SO_REUSEPORT, (const void *)&reuseport, sizeof(int)) == -1) // 端口复用需要内核支持
         {
-            // 失败就失败吧，失败顶多是惊群，但程序依旧可以正常运行，所以仅仅提示一下即可
+            
             ngx_log_stderr(errno, "CSocekt::Initialize()中setsockopt(SO_REUSEPORT)失败", i);
         }
-        // else
-        //{
-        //     ngx_log_stderr(errno,"CSocekt::Initialize()中setsockopt(SO_REUSEPORT)成功");
-        // }
 
         // 设置该 socket 为非阻塞（信箱）
         if (setnonblocking(isock) == false)
@@ -346,6 +342,7 @@ int CSocekt::ngx_epoll_init()
 
         // 对监听端口的读事件设置处理方法，因为监听端口是用来等对方连接的发送三路握手的，所以监听端口关心的就是读事件
         p_Conn->rhandler = &CSocekt::ngx_event_accept;
+
 
         // 往监听socket上增加监听事件，从而开始让监听端口履行其职责【如果不加这行，虽然端口能连上，但不会触发ngx_epoll_process_events()里边的epoll_wait()往下走】
         /*if(ngx_epoll_add_event((*pos)->fd,       //socekt句柄
